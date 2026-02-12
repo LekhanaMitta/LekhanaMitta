@@ -11,10 +11,29 @@ API_URL = "https://api.monkeytype.com/users/personalBests"
 START = "<!-- MONKEYTYPE:START -->"
 END = "<!-- MONKEYTYPE:END -->"
 
+# def http_get_json(url: str, ape_key: str) -> dict:
+#     req = Request(url, headers={"Authorization": f"ApeKey {ape_key}"})
+#     with urlopen(req, timeout=30) as r:
+#         return json.loads(r.read().decode("utf-8"))
+# from urllib.error import HTTPError, URLError
+
 def http_get_json(url: str, ape_key: str) -> dict:
-    req = Request(url, headers={"Authorization": f"ApeKey {ape_key}"})
-    with urlopen(req, timeout=30) as r:
-        return json.loads(r.read().decode("utf-8"))
+    # Monkeytype docs label this as "BearerAuth" for ApeKey auth. :contentReference[oaicite:1]{index=1}
+    headers = {
+        "Accept": "application/json",
+        "Authorization": f"Bearer {ape_key}",  # <-- important change
+    }
+    req = Request(url, headers=headers)
+
+    try:
+        with urlopen(req, timeout=30) as r:
+            return json.loads(r.read().decode("utf-8"))
+    except HTTPError as e:
+        body = e.read().decode("utf-8", errors="replace")
+        raise RuntimeError(f"Monkeytype API failed: HTTP {e.code} body={body}") from e
+    except URLError as e:
+        raise RuntimeError(f"Network error calling Monkeytype: {e}") from e
+
 
 def pick_best(pb_list):
     if not pb_list:
