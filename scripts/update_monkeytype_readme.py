@@ -5,7 +5,7 @@ import sys
 from datetime import datetime, timezone
 from urllib.request import urlopen
 
-USERNAME = "LekhanaMitta"   # <-- put your monkeytype username here
+USERNAME = "theUnbeknownst"   # <-- put your monkeytype username here
 API_URL = f"https://api.monkeytype.com/users/{USERNAME}"
 
 START = "<!-- MONKEYTYPE:START -->"
