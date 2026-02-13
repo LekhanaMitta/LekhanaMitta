@@ -21,7 +21,10 @@ jobs:
           python-version: "3.x"
 
       - name: Update README section
+        env:
+          MONKEYTYPE_APE_KEY: ${{ secrets.MONKEYTYPE_APE_KEY }}
         run: python scripts/update_monkeytype_readme.py
+
 
 
       - name: Commit changes
