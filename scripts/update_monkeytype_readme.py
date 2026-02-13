@@ -22,7 +22,7 @@ def api_get(path):
     req = Request(
         f"{BASE}{path}",
         headers={
-            "Authorization": f"Bearer {APEKEY}",
+            "Authorization": f"bearer {APEKEY}",
             "Accept": "application/json",
         },
     )
