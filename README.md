@@ -5,5 +5,9 @@ _loading..._
 <!-- MONKEYTYPE:END -->
 
 
-### LeetCode
-![LeetCode Dashboard](./assets/leetcode.svg)
+##  LeetCode Progress
+
+<p align="center">
+  <img src="./assets/leetcode.svg" alt="LeetCode Dashboard" width="720"/>
+</p>
+
