@@ -36,7 +36,6 @@ def build_session():
         "User-Agent": "Mozilla/5.0",
     })
 
-    # Optional auth via cookies (recommended if you want "from scratch with cookies")
     leetcode_session = os.getenv("LEETCODE_SESSION")
     csrf = os.getenv("LEETCODE_CSRF")
 
@@ -46,6 +45,12 @@ def build_session():
         s.headers["x-csrftoken"] = csrf
 
     return s
+
+def pct(ac_count: int, submissions: int):
+    """Return acceptance rate as a percentage float (0..100) or None."""
+    if submissions is None or submissions <= 0:
+        return None
+    return (ac_count / submissions) * 100.0
 
 def main():
     username = os.environ["LEETCODE_USERNAME"]
@@ -68,20 +73,42 @@ def main():
     if not user:
         raise RuntimeError("User not found (matchedUser is null). Check username.")
 
-    # Normalize counts
-    ac = {row["difficulty"]: row["count"] for row in user["submitStatsGlobal"]["acSubmissionNum"]}
+    rows = user["submitStatsGlobal"]["acSubmissionNum"]
+
+    # Build dicts keyed by difficulty: Easy/Medium/Hard/All
+    ac_count = {row["difficulty"]: int(row.get("count", 0) or 0) for row in rows}
+    submissions = {row["difficulty"]: int(row.get("submissions", 0) or 0) for row in rows}
+
+    # Acceptance rate: solved / submissions
+    acc_rate_by_diff = {
+        diff: pct(ac_count.get(diff, 0), submissions.get(diff, 0))
+        for diff in ["Easy", "Medium", "Hard", "All"]
+    }
+
     out = {
         "username": user["username"],
         "ranking": user["profile"]["ranking"],
         "reputation": user["profile"]["reputation"],
         "starRating": user["profile"]["starRating"],
         "solved": {
-            "Easy": ac.get("Easy", 0),
-            "Medium": ac.get("Medium", 0),
-            "Hard": ac.get("Hard", 0),
-            "All": ac.get("All", 0),
+            "Easy": ac_count.get("Easy", 0),
+            "Medium": ac_count.get("Medium", 0),
+            "Hard": ac_count.get("Hard", 0),
+            "All": ac_count.get("All", 0),
         },
-        # submissionCalendar is a JSON string map: { "timestamp": count, ... }
+        "submissions": {
+            "Easy": submissions.get("Easy", 0),
+            "Medium": submissions.get("Medium", 0),
+            "Hard": submissions.get("Hard", 0),
+            "All": submissions.get("All", 0),
+        },
+        # store as numbers (0..100) so renderer can format nicely
+        "acceptanceRate": {
+            "Easy": acc_rate_by_diff.get("Easy"),
+            "Medium": acc_rate_by_diff.get("Medium"),
+            "Hard": acc_rate_by_diff.get("Hard"),
+            "All": acc_rate_by_diff.get("All"),
+        },
         "submissionCalendar": user.get("submissionCalendar"),
         "generatedAt": datetime.utcnow().isoformat() + "Z",
     }
