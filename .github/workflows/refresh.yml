@@ -3,11 +3,16 @@ name: Refresh Dashboard Data
 on:
   schedule:
     - cron: "0 */3 * * *"    # every 3 hours
-  push:
-    branches: [main]           # also refresh on every commit to this repo
+  # NOTE: "push" trigger intentionally removed — it caused a push→Action→push
+  # infinite loop. The schedule + manual dispatch are enough.
   repository_dispatch:         # triggered by cross-repo commits (SQL challenge)
     types: [sql-update]
   workflow_dispatch:           # run manually from Actions tab
+
+# Only one run at a time — queues instead of racing
+concurrency:
+  group: dashboard-refresh
+  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -23,6 +28,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          # Always fetch the latest commit so we never push on a stale base
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -35,6 +43,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SQL_REPO: LekhanaMitta/8WeekSQLChallenge
           LC_USERNAME: LekhanaRM
+          MT_USERNAME: theUnbeknownst
           DATA_JSON_PATH: data.json
         run: python scripts/fetch_data.py
 
@@ -43,13 +52,19 @@ jobs:
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data.json
-          git diff --staged --quiet || git commit -m "chore: refresh dashboard data"
-          git push
+          if git diff --staged --quiet; then
+            echo "No changes to data.json, skipping commit."
+          else
+            git commit -m "chore: refresh dashboard data"
+            # Pull with rebase in case another commit landed while we were running
+            git pull --rebase origin main
+            git push
+          fi
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .        # deploy the whole repo root as the site
+          path: .
 
       - name: Deploy to GitHub Pages
         id: deployment
