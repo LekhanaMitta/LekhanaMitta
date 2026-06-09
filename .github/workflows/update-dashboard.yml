@@ -1,0 +1,45 @@
+name: Update Task Dashboard
+
+on:
+  schedule:
+    - cron: "0 6 * * *"          # every day at 06:00 UTC
+  issues:
+    types: [opened, edited, closed, reopened, labeled, unlabeled, deleted]
+  issue_comment:
+    types: [created, edited, deleted]
+  workflow_dispatch:              # lets you run it manually from the Actions tab
+
+permissions:
+  contents: write                 # needed to commit the updated README
+  issues: read                    # needed to read your task issues
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build dashboard
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TASK_LABEL: task         # only issues with this label are shown
+          README_PATH: README.md
+        run: python scripts/build_dashboard.py
+
+      - name: Commit changes
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          if git diff --staged --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "chore: update task dashboard"
+            git push
+          fi
