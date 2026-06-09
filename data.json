@@ -1,0 +1,80 @@
+{
+  "generatedAt": "2026-06-09T19:06:21.733690+00:00",
+  "monkeytype": {
+    "username": "theUnbeknownst",
+    "lastUpdated": "2026-06-09T19:06:19.786527+00:00",
+    "modes": [
+      {
+        "name": "time 120",
+        "wpm": 66.9,
+        "raw": 71.8,
+        "acc": 96.4,
+        "con": 75.3
+      }
+    ],
+    "source": "today"
+  },
+  "leetcode": null,
+  "sql": {
+    "repo": "LekhanaMitta/8WeekSQLChallenge",
+    "weeks": [
+      {
+        "n": 1,
+        "name": "Danny's Diner",
+        "folder": "Week1",
+        "commits": 5,
+        "done": true
+      },
+      {
+        "n": 2,
+        "name": "Pizza Runner",
+        "folder": "Week2",
+        "commits": 6,
+        "done": true
+      },
+      {
+        "n": 3,
+        "name": "Foodie-Fi",
+        "folder": "Week3",
+        "commits": 2,
+        "done": false
+      },
+      {
+        "n": 4,
+        "name": "Data Bank",
+        "folder": "Week4",
+        "commits": 7,
+        "done": true
+      },
+      {
+        "n": 5,
+        "name": "Data Mart",
+        "folder": "Week5",
+        "commits": 3,
+        "done": true
+      },
+      {
+        "n": 6,
+        "name": "Clique Bait",
+        "folder": null,
+        "commits": 0,
+        "done": false
+      },
+      {
+        "n": 7,
+        "name": "Balanced Tree",
+        "folder": null,
+        "commits": 0,
+        "done": false
+      },
+      {
+        "n": 8,
+        "name": "Fresh Segments",
+        "folder": null,
+        "commits": 0,
+        "done": false
+      }
+    ],
+    "lastUpdated": "2026-06-09T19:06:21.733661+00:00"
+  }
+}
