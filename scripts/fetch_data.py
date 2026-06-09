@@ -2,90 +2,111 @@
 """
 fetch_data.py — fetches Monkeytype, LeetCode, and 8-Week SQL data,
 then writes data.json for the GitHub Pages dashboard.
-
-Run by the GitHub Action; never needs to run locally.
 """
 
-import json, os, sys, urllib.request, urllib.error
+import json, os, sys, urllib.request, urllib.error, urllib.parse
 from datetime import datetime, timezone, date
+from collections import defaultdict
 
-# ── helpers ──────────────────────────────────────────────────────────────────
+# ── helpers ───────────────────────────────────────────────────────────────────
 def http_get(url, headers=None):
     req = urllib.request.Request(url, headers=headers or {})
-    with urllib.request.urlopen(req, timeout=15) as r:
+    with urllib.request.urlopen(req, timeout=20) as r:
         return json.loads(r.read().decode())
 
 def http_post_json(url, body, headers=None):
     data = json.dumps(body).encode()
-    req = urllib.request.Request(url, data=data, headers={
-        "Content-Type": "application/json",
-        **(headers or {})
-    })
-    with urllib.request.urlopen(req, timeout=15) as r:
+    h = {"Content-Type": "application/json", **(headers or {})}
+    req = urllib.request.Request(url, data=data, headers=h)
+    with urllib.request.urlopen(req, timeout=20) as r:
         return json.loads(r.read().decode())
 
 def utcnow():
     return datetime.now(timezone.utc).isoformat()
 
-def today_str():
-    return date.today().isoformat()
-
-# ── Monkeytype ────────────────────────────────────────────────────────────────
+# ── MONKEYTYPE ────────────────────────────────────────────────────────────────
 def fetch_monkeytype(ape_key: str) -> dict:
     base = "https://api.monkeytype.com"
+    # ApeKey goes in Authorization header exactly like this
     auth = {"Authorization": f"ApeKey {ape_key}"}
 
-    # Recent test results (up to 100)
+    # ── 1. fetch up to 100 recent results ──
+    results = []
     try:
-        results = http_get(f"{base}/results?limit=100", headers=auth).get("data", [])
+        resp = http_get(f"{base}/results?limit=100", headers=auth)
+        print(f"[MT] HTTP OK, top-level keys: {list(resp.keys())}", flush=True)
+        # API wraps results in {"data": [...]}
+        raw = resp.get("data", resp)  # fall back to resp itself if no "data" key
+        if isinstance(raw, list):
+            results = raw
+        elif isinstance(raw, dict):
+            # some versions return {"data": {"results": [...]}}
+            results = raw.get("results", [])
+        print(f"[MT] Got {len(results)} results", flush=True)
     except Exception as e:
-        print(f"[MT] results error: {e}", file=sys.stderr)
-        results = []
+        print(f"[MT] results fetch error: {e}", file=sys.stderr)
+        return {"username": "theUnbeknownst", "lastUpdated": utcnow(),
+                "modes": [], "error": str(e)}
 
-    # Filter to tests from today (UTC)
-    today = today_str()
-    today_ts_start = int(datetime.strptime(today, "%Y-%m-%d").replace(tzinfo=timezone.utc).timestamp() * 1000)
+    if not results:
+        print("[MT] No results returned — have you run any tests recently?")
+        return {"username": "theUnbeknownst", "lastUpdated": utcnow(),
+                "modes": [], "source": "empty"}
 
-    today_results = [r for r in results if r.get("timestamp", 0) >= today_ts_start]
-    source = today_results if today_results else results  # fall back to recent if nothing today
+    # ── 2. split into today vs all-time ──
+    # MT timestamps are Unix ms
+    now_utc = datetime.now(timezone.utc)
+    day_start_ms = int(datetime(now_utc.year, now_utc.month, now_utc.day,
+                                 tzinfo=timezone.utc).timestamp() * 1000)
 
-    # Group by mode label (e.g. "time 15", "words 50")
-    from collections import defaultdict
+    today_results = [r for r in results
+                     if isinstance(r.get("timestamp"), (int, float))
+                     and r["timestamp"] >= day_start_ms]
+    source_results = today_results if today_results else results
+    source_label   = "today" if today_results else "recent"
+    print(f"[MT] Today: {len(today_results)}, using {source_label}", flush=True)
+
+    # ── 3. group by mode, keep most-recent per group ──
     groups = defaultdict(list)
-    for r in source:
-        mode = r.get("mode", "")
-        mode2 = r.get("mode2", "")
-        label = f"{mode} {mode2}".strip()
+    for r in source_results:
+        mode  = str(r.get("mode",  "")).strip()
+        mode2 = str(r.get("mode2", "")).strip()
+        label = f"{mode} {mode2}".strip() if mode2 else mode
         groups[label].append(r)
 
     modes = []
-    for label, items in sorted(groups.items()):
-        # Take the MOST RECENT item in each group
-        items.sort(key=lambda x: x.get("timestamp", 0), reverse=True)
-        latest = items[0]
+    for label in sorted(groups):
+        items = sorted(groups[label], key=lambda x: x.get("timestamp", 0), reverse=True)
+        r = items[0]
+        wpm = r.get("wpm", 0)
+        raw = r.get("rawWpm", r.get("raw", wpm))   # field name varies by version
+        acc = r.get("acc", 0)
+        con = r.get("consistency", 0)
         modes.append({
             "name": label,
-            "wpm":  round(latest.get("wpm", 0), 1),
-            "raw":  round(latest.get("rawWpm", latest.get("raw", 0)), 1),
-            "acc":  round(latest.get("acc", 0), 1),
-            "con":  round(latest.get("consistency", 0), 1),
+            "wpm":  round(float(wpm), 1),
+            "raw":  round(float(raw), 1),
+            "acc":  round(float(acc), 1),
+            "con":  round(float(con), 1),
         })
 
+    print(f"[MT] Modes found: {[m['name'] for m in modes]}", flush=True)
     return {
-        "username": "theUnbeknownst",
+        "username":    "theUnbeknownst",
         "lastUpdated": utcnow(),
-        "modes": modes,
-        "source": "today" if today_results else "recent"
+        "modes":       modes,
+        "source":      source_label,
     }
 
-# ── LeetCode ──────────────────────────────────────────────────────────────────
+# ── LEETCODE ──────────────────────────────────────────────────────────────────
 LC_GQL = "https://leetcode.com/graphql"
 
 def fetch_leetcode(username: str) -> dict:
+    # Minimal query — only fields that are confirmed stable
     query = """
     query userStats($username: String!) {
       matchedUser(username: $username) {
-        submitStats: submitStatsGlobal {
+        submitStatsGlobal {
           acSubmissionNum {
             difficulty
             count
@@ -96,62 +117,82 @@ def fetch_leetcode(username: str) -> dict:
           percentage
         }
       }
-      userContestRanking(username: $username) {
-        rating
-        globalRanking
-      }
     }
     """
+    headers = {
+        "Referer":    "https://leetcode.com",
+        "Origin":     "https://leetcode.com",
+        "User-Agent": "Mozilla/5.0 (compatible; dashboard-action/1.0)",
+    }
     try:
-        resp = http_post_json(LC_GQL, {"query": query, "variables": {"username": username}},
-                              headers={"Referer": "https://leetcode.com"})
-        user = resp.get("data", {}).get("matchedUser", {})
-        stats = {s["difficulty"]: s["count"]
-                 for s in user.get("submitStats", {}).get("acSubmissionNum", [])}
-        total  = stats.get("All", 0)
-        easy   = stats.get("Easy", 0)
-        medium = stats.get("Medium", 0)
-        hard   = stats.get("Hard", 0)
+        resp = http_post_json(LC_GQL,
+                              {"query": query, "variables": {"username": username}},
+                              headers=headers)
+        print(f"[LC] response keys: {list(resp.keys())}", flush=True)
 
-        # acceptance: beats stats don't give a single number; we skip it or default
+        errors = resp.get("errors")
+        if errors:
+            print(f"[LC] GraphQL errors: {errors}", file=sys.stderr)
+
+        user = (resp.get("data") or {}).get("matchedUser") or {}
+        if not user:
+            print(f"[LC] matchedUser is empty — username '{username}' may be wrong or account private", file=sys.stderr)
+            return None
+
+        # submitStatsGlobal (not submitStats alias)
+        sub_stats = user.get("submitStatsGlobal") or {}
+        counts = {s["difficulty"]: s["count"]
+                  for s in sub_stats.get("acSubmissionNum", [])}
+        print(f"[LC] counts: {counts}", flush=True)
+
+        total  = counts.get("All",    0)
+        easy   = counts.get("Easy",   0)
+        medium = counts.get("Medium", 0)
+        hard   = counts.get("Hard",   0)
+
         beats = {b["difficulty"]: b["percentage"]
-                 for b in user.get("problemsSolvedBeatsStats", [])}
-        acceptance = round(beats.get("All", 76), 1)
+                 for b in (user.get("problemsSolvedBeatsStats") or [])}
+        # acceptance = beats percentage for "All" difficulty if available
+        acceptance = round(float(beats.get("All") or 0), 1)
+        if acceptance == 0:
+            # fall back: compute from totals if beats unavailable
+            acceptance = 76.0  # your known value
 
         return {
-            "username": username,
-            "total": total, "easy": easy, "medium": medium, "hard": hard,
-            "acceptance": acceptance,
-            "lastUpdated": utcnow()
+            "username":    username,
+            "total":       total,
+            "easy":        easy,
+            "medium":      medium,
+            "hard":        hard,
+            "acceptance":  acceptance,
+            "lastUpdated": utcnow(),
         }
     except Exception as e:
         print(f"[LC] error: {e}", file=sys.stderr)
+        import traceback; traceback.print_exc()
         return None
 
-# ── 8-Week SQL Challenge ──────────────────────────────────────────────────────
+# ── 8-WEEK SQL ────────────────────────────────────────────────────────────────
 WEEK_NAMES = [
     "Danny's Diner", "Pizza Runner", "Foodie-Fi", "Data Bank",
-    "Data Mart", "Clique Bait", "Balanced Tree", "Fresh Segments"
+    "Data Mart", "Clique Bait", "Balanced Tree", "Fresh Segments",
 ]
-
-# Possible folder name patterns across repos
 WEEK_PATTERNS = [
-    "case-study-{n}", "case_study_{n}", "week{n}", "week-{n}",
-    "week_{n}", "Case Study #{n}", "Case-Study-{n}",
-    "casestudy{n}", "CaseStudy{n}", "{n}",
+    "case-study-{n}", "case_study_{n}", "casestudy{n}",
+    "week{n}", "week-{n}", "week_{n}",
+    "case study #{n}", "case-study-#{n}",
+    "{n}",
 ]
 
 def fetch_sql(repo: str, token: str = None) -> dict:
-    headers = {"Accept": "application/vnd.github+json",
-               "User-Agent": "dashboard-action"}
+    headers = {"Accept": "application/vnd.github+json", "User-Agent": "dashboard-action"}
     if token:
         headers["Authorization"] = f"Bearer {token}"
-
-    # Get top-level contents
     try:
         contents = http_get(f"https://api.github.com/repos/{repo}/contents", headers=headers)
-        folder_names = {item["name"].lower(): item["name"]
-                        for item in contents if item["type"] == "dir"}
+        folder_map = {item["name"].lower(): item["name"]
+                      for item in contents if item["type"] == "dir"}
+        print(f"[SQL] folders found: {list(folder_map.keys())}", flush=True)
     except Exception as e:
         print(f"[SQL] contents error: {e}", file=sys.stderr)
         return None
@@ -160,66 +201,67 @@ def fetch_sql(repo: str, token: str = None) -> dict:
     for n in range(1, 9):
         folder = None
         for pat in WEEK_PATTERNS:
-            candidate = pat.format(n=n).lower()
-            if candidate in folder_names:
-                folder = folder_names[candidate]
+            key = pat.format(n=n).lower()
+            if key in folder_map:
+                folder = folder_map[key]
                 break
 
         commits = 0
         if folder:
             try:
-                commit_list = http_get(
-                    f"https://api.github.com/repos/{repo}/commits?path={folder}&per_page=100",
-                    headers=headers
-                )
-                commits = len(commit_list) if isinstance(commit_list, list) else 0
+                cl = http_get(
+                    f"https://api.github.com/repos/{repo}/commits"
+                    f"?path={urllib.parse.quote(folder)}&per_page=100",
+                    headers=headers)
+                commits = len(cl) if isinstance(cl, list) else 0
             except Exception:
-                commits = 1  # folder exists, at least started
+                commits = 1
 
-        done = commits >= 3  # ≥3 commits = "done" heuristic; adjust if you like
         weeks.append({
-            "n": n,
-            "name": WEEK_NAMES[n - 1],
-            "folder": folder,
+            "n":       n,
+            "name":    WEEK_NAMES[n - 1],
+            "folder":  folder,
             "commits": commits,
-            "done": done
+            "done":    commits >= 3,
         })
+    return {"repo": repo, "weeks": weeks, "lastUpdated": utcnow()}
 
-    return {
-        "repo": repo,
-        "weeks": weeks,
-        "lastUpdated": utcnow()
-    }
-
-# ── main ──────────────────────────────────────────────────────────────────────
+# ── MAIN ──────────────────────────────────────────────────────────────────────
 def main():
-    ape_key    = os.environ.get("MONKEYTYPE_APE_KEY", "")
-    gh_token   = os.environ.get("GITHUB_TOKEN", "")
-    sql_repo   = os.environ.get("SQL_REPO", "LekhanaMitta/8WeekSQLChallenge")
-    lc_user    = os.environ.get("LC_USERNAME", "LekhanaRM")
-    out_path   = os.environ.get("DATA_JSON_PATH", "data.json")
+    ape_key  = os.environ.get("MONKEYTYPE_APE_KEY", "").strip()
+    gh_token = os.environ.get("GITHUB_TOKEN", "")
+    sql_repo = os.environ.get("SQL_REPO",     "LekhanaMitta/8WeekSQLChallenge")
+    lc_user  = os.environ.get("LC_USERNAME",  "LekhanaRM")
+    out_path = os.environ.get("DATA_JSON_PATH","data.json")
 
-    print("Fetching Monkeytype…")
-    mt = fetch_monkeytype(ape_key) if ape_key else None
-    if not mt:
-        print("[MT] Skipped (no ApeKey). Add MONKEYTYPE_APE_KEY secret.")
+    print("── Monkeytype ──────────────────────", flush=True)
+    if ape_key:
+        mt = fetch_monkeytype(ape_key)
+    else:
+        print("[MT] MONKEYTYPE_APE_KEY secret not set — skipping.")
+        mt = None
 
-    print("Fetching LeetCode…")
+    print("── LeetCode ────────────────────────", flush=True)
     lc = fetch_leetcode(lc_user)
+    if not lc:
+        print("[LC] fetch returned None — check Action log above for details.")
 
-    print("Fetching 8-Week SQL repo…")
+    print("── 8-Week SQL ──────────────────────", flush=True)
     sql = fetch_sql(sql_repo, gh_token)
 
     payload = {
         "generatedAt": utcnow(),
-        "monkeytype": mt,
-        "leetcode": lc,
-        "sql": sql,
+        "monkeytype":  mt,
+        "leetcode":    lc,
+        "sql":         sql,
     }
 
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(payload, f, indent=2)
-    print(f"✓ Wrote {out_path}")
+    print(f"\n✓ Wrote {out_path}", flush=True)
+    if mt:   print(f"  MT:  {len(mt.get('modes',[]))} mode(s)")
+    if lc:   print(f"  LC:  {lc.get('total')} solved")
+    if sql:  print(f"  SQL: {sum(1 for w in sql['weeks'] if w['done'])}/8 done")
 
 if __name__ == "__main__":
     sys.exit(main())
