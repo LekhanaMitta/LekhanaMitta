@@ -1,19 +1,96 @@
 {
-  "generatedAt": "2026-06-09T19:47:39.000268+00:00",
+  "generatedAt": "2026-06-09T19:58:26.016372+00:00",
   "monkeytype": {
     "username": "theUnbeknownst",
-    "lastUpdated": "2026-06-09T19:47:37.643508+00:00",
-    "modes": [],
-    "error": "HTTP Error 403: Forbidden"
+    "profileUrl": "https://monkeytype.com/profile/theUnbeknownst",
+    "streak": 0,
+    "maxStreak": 0,
+    "completedTests": 0,
+    "hoursTyped": 0.0,
+    "xp": 0,
+    "personalBests": {},
+    "recentModes": [],
+    "lastUpdated": "2026-06-09T19:58:23.980304+00:00"
   },
   "leetcode": {
     "username": "LekhanaRM",
+    "profileUrl": "https://leetcode.com/LekhanaRM",
     "total": 338,
     "easy": 147,
     "medium": 174,
     "hard": 17,
-    "acceptance": 76.0,
-    "lastUpdated": "2026-06-09T19:47:37.818392+00:00"
+    "totalEasy": 949,
+    "totalMedium": 2067,
+    "totalHard": 942,
+    "beatsEasy": 94.9,
+    "beatsMedium": 92.4,
+    "beatsHard": 74.3,
+    "ranking": 388474,
+    "reputation": 0,
+    "streak": 11,
+    "totalActiveDays": 63,
+    "languages": [
+      {
+        "lang": "C++",
+        "solved": 255
+      },
+      {
+        "lang": "MySQL",
+        "solved": 61
+      },
+      {
+        "lang": "Java",
+        "solved": 37
+      },
+      {
+        "lang": "Python3",
+        "solved": 1
+      }
+    ],
+    "topSkills": [
+      {
+        "tag": "Array",
+        "solved": 142,
+        "tier": "fundamental"
+      },
+      {
+        "tag": "Database",
+        "solved": 61,
+        "tier": "intermediate"
+      },
+      {
+        "tag": "Dynamic Programming",
+        "solved": 58,
+        "tier": "advanced"
+      },
+      {
+        "tag": "Tree",
+        "solved": 51,
+        "tier": "intermediate"
+      },
+      {
+        "tag": "Binary Tree",
+        "solved": 50,
+        "tier": "intermediate"
+      },
+      {
+        "tag": "Depth-First Search",
+        "solved": 48,
+        "tier": "intermediate"
+      },
+      {
+        "tag": "Hash Table",
+        "solved": 45,
+        "tier": "intermediate"
+      },
+      {
+        "tag": "Breadth-First Search",
+        "solved": 36,
+        "tier": "intermediate"
+      }
+    ],
+    "calendar30": {},
+    "lastUpdated": "2026-06-09T19:58:24.817502+00:00"
   },
   "sql": {
     "repo": "LekhanaMitta/8WeekSQLChallenge",
@@ -75,6 +152,6 @@
         "done": false
       }
     ],
-    "lastUpdated": "2026-06-09T19:47:39.000238+00:00"
+    "lastUpdated": "2026-06-09T19:58:26.016329+00:00"
   }
 }
