@@ -1,18 +1,10 @@
 {
-  "generatedAt": "2026-06-09T19:07:14.028575+00:00",
+  "generatedAt": "2026-06-09T19:08:37.629568+00:00",
   "monkeytype": {
     "username": "theUnbeknownst",
-    "lastUpdated": "2026-06-09T19:07:12.519565+00:00",
-    "modes": [
-      {
-        "name": "time 120",
-        "wpm": 66.9,
-        "raw": 71.8,
-        "acc": 96.4,
-        "con": 75.3
-      }
-    ],
-    "source": "today"
+    "lastUpdated": "2026-06-09T19:08:36.035308+00:00",
+    "modes": [],
+    "source": "recent"
   },
   "leetcode": null,
   "sql": {
@@ -75,6 +67,6 @@
         "done": false
       }
     ],
-    "lastUpdated": "2026-06-09T19:07:14.028539+00:00"
+    "lastUpdated": "2026-06-09T19:08:37.629545+00:00"
   }
 }
