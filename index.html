@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>LekhanaRM · Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#0D0F14; --surface:#13161E; --s2:#1A1E28; --s3:#202533;
+  --border:#252A38; --text:#E8EAF0; --muted:#5A6278;
+  --accent:#7C6EFA; --green:#3DDC84; --gold:#F5C542;
+  --red:#FF6B6B; --orange:#FFA94D; --blue:#5BC8F5; --pink:#F472B6;
+  --display:'Syne',sans-serif; --body:'Inter',sans-serif; --mono:'JetBrains Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--body);min-height:100vh;padding:32px 20px 80px;}
+a{color:inherit;text-decoration:none;}
+
+.wrap{max-width:1100px;margin:0 auto;}
+header{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;padding-bottom:20px;border-bottom:1px solid var(--border);}
+.logo{font-family:var(--display);font-size:22px;font-weight:800;letter-spacing:-.5px;}
+.logo span{color:var(--accent);}
+.stamp{font-family:var(--mono);font-size:12px;color:var(--muted);}
+
+/* ── grid ── */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:580px){.grid{grid-template-columns:1fr;}}
+.span2{grid-column:span 2;}
+@media(max-width:900px){.span2{grid-column:span 1;}}
+.span3{grid-column:1/-1;}
+
+/* ── card shell ── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;}
+.card::before{content:'';display:block;height:2px;}
+.monkey  ::before{background:linear-gradient(90deg,var(--gold),#ff9a3c);}
+.leetcode::before{background:linear-gradient(90deg,var(--orange),var(--red));}
+.sql     ::before{background:linear-gradient(90deg,var(--green),#1fa8a8);}
+.jobs    ::before{background:linear-gradient(90deg,var(--blue),var(--accent));}
+.tasks   ::before{background:linear-gradient(90deg,var(--accent),#c084fc);}
+
+/* ── card header ── */
+.card-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border);}
+.ctg{display:flex;align-items:center;gap:8px;}
+.cicon{font-size:15px;}
+.ctitle{font-family:var(--display);font-size:11px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);}
+.clink{font-family:var(--mono);font-size:11px;color:var(--muted);border:1px solid var(--border);padding:4px 10px;border-radius:6px;transition:all .15s;white-space:nowrap;}
+.clink:hover{color:var(--text);border-color:var(--accent);}
+
+/* ── card body ── */
+.cbody{padding:18px 20px;flex:1;}
+
+/* ── stat row ── */
+.srow{display:flex;gap:0;margin-bottom:14px;}
+.stat{flex:1;padding-right:14px;display:flex;flex-direction:column;gap:3px;}
+.stat+.stat{padding-left:14px;padding-right:0;border-left:1px solid var(--border);}
+.sv{font-family:var(--display);font-size:26px;font-weight:800;line-height:1;}
+.sl{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+.divider{height:1px;background:var(--border);margin:14px 0;}
+
+/* colours */
+.cg{color:var(--gold);} .cgr{color:var(--green);} .cb{color:var(--blue);}
+.cp{color:var(--accent);} .co{color:var(--orange);} .cr{color:var(--red);}
+.cpk{color:var(--pink);} .cm{color:var(--muted);}
+
+/* ── tabs ── */
+.tabs{display:flex;gap:4px;margin-bottom:14px;flex-wrap:wrap;}
+.tab{font-family:var(--mono);font-size:11px;padding:5px 10px;border:1px solid var(--border);border-radius:6px;background:none;color:var(--muted);cursor:pointer;transition:all .15s;}
+.tab:hover{border-color:var(--accent);color:var(--text);}
+.tab.on{background:var(--s2);border-color:var(--gold);color:var(--gold);}
+.tab.on.lc{border-color:var(--orange);color:var(--orange);}
+
+/* ── MT personal bests table ── */
+.pb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;}
+.pb-card{background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;}
+.pb-card:hover{border-color:var(--gold);}
+.pb-mode{font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:6px;}
+.pb-stats{display:grid;grid-template-columns:1fr 1fr;gap:4px;}
+.pb-val{font-family:var(--display);font-size:18px;font-weight:800;color:var(--gold);}
+.pb-lbl{font-family:var(--mono);font-size:9px;color:var(--muted);text-transform:uppercase;}
+.pb-sub{font-family:var(--mono);font-size:11px;color:var(--muted);}
+.pb-sub b{color:var(--text);}
+
+/* ── streak pill ── */
+.streak-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+.spill{background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:8px 14px;display:flex;flex-direction:column;gap:2px;flex:1;min-width:90px;}
+.spill-val{font-family:var(--display);font-size:20px;font-weight:800;}
+.spill-lbl{font-family:var(--mono);font-size:10px;color:var(--muted);text-transform:uppercase;}
+
+/* ── LC ring ── */
+.lc-ring-wrap{display:flex;gap:20px;align-items:center;}
+.ring-outer{position:relative;width:120px;height:120px;flex:none;}
+#lcCanvas{width:120px;height:120px;}
+.ring-mid{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;}
+.ring-num{font-family:var(--display);font-size:24px;font-weight:800;}
+.ring-sub{font-family:var(--mono);font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;}
+.lc-rows{flex:1;display:flex;flex-direction:column;gap:8px;}
+.lc-row{display:flex;align-items:center;gap:8px;}
+.ldot{width:8px;height:8px;border-radius:50%;flex:none;}
+.lname{font-family:var(--mono);font-size:12px;flex:1;}
+.lpct{font-family:var(--mono);font-size:10px;color:var(--muted);}
+.lnum{font-family:var(--display);font-size:15px;font-weight:700;}
+.lbeats{font-family:var(--mono);font-size:10px;color:var(--muted);}
+.lc-meta{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:10px;display:flex;gap:16px;flex-wrap:wrap;}
+.lc-meta b{color:var(--text);}
+
+/* ── skill tags ── */
+.skill-grid{display:flex;flex-wrap:wrap;gap:6px;}
+.skill-pill{font-family:var(--mono);font-size:11px;padding:4px 9px;border-radius:6px;border:1px solid var(--border);}
+.skill-pill.advanced    {border-color:#7c6efa44;color:var(--accent);}
+.skill-pill.intermediate{border-color:#f5c54244;color:var(--gold);}
+.skill-pill.fundamental {border-color:#3ddc8444;color:var(--green);}
+.skill-num{font-size:10px;opacity:.7;}
+
+/* ── lang bars ── */
+.lang-list{display:flex;flex-direction:column;gap:7px;}
+.lang-row{display:flex;align-items:center;gap:8px;}
+.lang-name{font-family:var(--mono);font-size:11px;width:70px;flex:none;}
+.lang-bar{flex:1;height:6px;background:var(--s2);border-radius:3px;overflow:hidden;}
+.lang-fill{height:100%;border-radius:3px;background:var(--orange);transition:width .5s ease;}
+.lang-count{font-family:var(--mono);font-size:11px;color:var(--muted);width:28px;text-align:right;}
+
+/* ── activity dots (30-day) ── */
+.cal-wrap{display:flex;flex-wrap:wrap;gap:3px;}
+.cal-dot{width:12px;height:12px;border-radius:3px;background:var(--s2);}
+.cal-dot.d1{background:#1a4a2e;}
+.cal-dot.d2{background:#206b3e;}
+.cal-dot.d3{background:#28904f;}
+.cal-dot.d4{background:var(--green);}
+
+/* ── SQL ── */
+.week-row{display:flex;align-items:center;gap:10px;margin-bottom:7px;}
+.wlbl{font-family:var(--mono);font-size:11px;color:var(--muted);width:54px;flex:none;}
+.wbar{flex:1;height:7px;background:var(--s2);border-radius:4px;overflow:hidden;}
+.wfill{height:100%;border-radius:4px;background:var(--green);transition:width .5s ease;}
+.wstat{font-family:var(--mono);font-size:10px;width:60px;text-align:right;flex:none;}
+.wstat.done{color:var(--green);} .wstat.wip{color:var(--gold);} .wstat.todo{color:var(--muted);}
+
+/* ── jobs ── */
+.add-btn{font-family:var(--display);font-size:12px;font-weight:700;background:var(--accent);color:#fff;border:none;border-radius:6px;padding:6px 12px;cursor:pointer;transition:opacity .15s;white-space:nowrap;}
+.add-btn:hover{opacity:.82;}
+.jlist{display:flex;flex-direction:column;gap:7px;max-height:240px;overflow-y:auto;}
+.jlist::-webkit-scrollbar{width:3px;}
+.jlist::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+.jitem{background:var(--s2);border:1px solid var(--border);border-radius:9px;padding:10px 12px;cursor:pointer;transition:border-color .15s;}
+.jitem:hover{border-color:var(--blue);}
+.ji-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:3px;}
+.ji-title{font-size:13px;font-weight:600;}
+.ji-date{font-family:var(--mono);font-size:10px;color:var(--muted);}
+.ji-company{font-family:var(--mono);font-size:11px;color:var(--muted);}
+.jbadge{font-family:var(--mono);font-size:10px;padding:2px 7px;border-radius:4px;font-weight:500;}
+.b-applied{background:#1a3a4a;color:var(--blue);}
+.b-oa{background:#2a2a1a;color:var(--gold);}
+.b-interview{background:#1a2a1a;color:var(--green);}
+.b-rejected{background:#2a1a1a;color:var(--red);}
+
+/* ── tasks ── */
+.task-ctrl{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+.tinput{flex:1;min-width:160px;background:var(--s2);border:1px solid var(--border);color:var(--text);font-family:var(--body);font-size:13px;padding:9px 12px;border-radius:8px;}
+.tinput:focus{outline:none;border-color:var(--accent);}
+.tinput::placeholder{color:var(--muted);}
+.bsm{font-family:var(--display);font-size:12px;font-weight:700;padding:9px 14px;border:1px solid var(--border);border-radius:8px;background:none;color:var(--text);cursor:pointer;white-space:nowrap;}
+.bsm:hover{border-color:var(--accent);color:var(--accent);}
+.bsm.pri{background:var(--accent);border-color:var(--accent);color:#fff;}
+.bsm.pri:hover{opacity:.85;}
+.frow{display:flex;gap:4px;margin-bottom:12px;}
+.fbtn{font-family:var(--mono);font-size:11px;padding:4px 10px;border:1px solid transparent;border-radius:6px;background:none;color:var(--muted);cursor:pointer;}
+.fbtn.on{border-color:var(--border);color:var(--text);background:var(--s2);}
+.tlist{display:flex;flex-direction:column;gap:5px;max-height:260px;overflow-y:auto;}
+.tlist::-webkit-scrollbar{width:3px;}
+.tlist::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+.titem{display:flex;align-items:center;gap:9px;background:var(--s2);border:1px solid var(--border);border-radius:9px;padding:10px 12px;}
+.tcb{appearance:none;width:17px;height:17px;border:1.5px solid var(--muted);border-radius:5px;flex:none;cursor:pointer;position:relative;transition:all .15s;}
+.tcb:checked{background:var(--accent);border-color:var(--accent);}
+.tcb:checked::after{content:'';position:absolute;left:4px;top:2px;width:5px;height:8px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg);}
+.ttext{flex:1;background:none;border:none;color:var(--text);font-family:var(--body);font-size:13px;}
+.ttext:focus{outline:none;}
+.titem.done .ttext{color:var(--muted);text-decoration:line-through;}
+.tmeta{font-family:var(--mono);font-size:10px;color:var(--muted);white-space:nowrap;}
+.tnbtn{font-family:var(--mono);font-size:10px;color:var(--muted);background:none;border:none;cursor:pointer;padding:2px 4px;}
+.tnbtn:hover,.tnbtn.on{color:var(--accent);}
+.tdel{font-family:var(--mono);font-size:11px;color:var(--muted);background:none;border:none;cursor:pointer;padding:2px 4px;}
+.tdel:hover{color:var(--red);}
+.tnotes{display:none;margin:4px 26px 0;background:var(--surface);border:1px solid var(--border);border-radius:6px;width:calc(100% - 52px);min-height:52px;padding:7px 10px;font-family:var(--body);font-size:12px;color:var(--text);resize:vertical;}
+.tnotes.open{display:block;}
+.tnotes::placeholder{color:var(--muted);}
+.tnotes:focus{outline:none;border-color:var(--accent);}
+.tprog{display:flex;align-items:center;gap:10px;margin-top:12px;}
+.tbar{flex:1;height:5px;background:var(--s2);border-radius:3px;overflow:hidden;}
+.tfill{height:100%;background:var(--accent);border-radius:3px;transition:width .4s ease;}
+.tpct{font-family:var(--mono);font-size:11px;color:var(--muted);}
+
+/* ── modal ── */
+.mbg{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;}
+.mbg.open{display:flex;}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:26px;width:100%;max-width:460px;max-height:90vh;overflow-y:auto;}
+.modal h2{font-family:var(--display);font-size:17px;font-weight:800;margin-bottom:18px;}
+.fg{margin-bottom:12px;}
+.fg label{font-family:var(--mono);font-size:10px;color:var(--muted);display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:.08em;}
+.fg input,.fg select,.fg textarea{width:100%;background:var(--s2);border:1px solid var(--border);color:var(--text);font-family:var(--body);font-size:13px;padding:9px 11px;border-radius:8px;}
+.fg textarea{min-height:72px;resize:vertical;}
+.fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:var(--accent);}
+.fg select option{background:var(--s2);}
+.mbtns{display:flex;gap:8px;justify-content:flex-end;margin-top:18px;}
+
+/* ── misc ── */
+.empty{text-align:center;padding:28px;color:var(--muted);font-family:var(--mono);font-size:12px;}
+.loading{color:var(--muted);font-family:var(--mono);font-size:12px;padding:16px 0;}
+.loading::after{content:'';animation:dots 1.2s infinite;}
+@keyframes dots{0%{content:'';}33%{content:'.';}66%{content:'..';}100%{content:'...';}}
+.err{color:var(--red);font-family:var(--mono);font-size:12px;padding:8px 0;}
+.tooltip{position:fixed;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:7px 11px;font-family:var(--mono);font-size:12px;pointer-events:none;opacity:0;transition:opacity .1s;z-index:99;}
+.section-lbl{font-family:var(--mono);font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">Lekhana<span>RM</span> · dashboard</div>
+    <div class="stamp" id="stamp"></div>
+  </header>
+
+  <div class="grid">
+
+    <!-- ══ MONKEYTYPE (span 2) ══════════════════════════════════════════════ -->
+    <div class="card monkey span2">
+      <div class="card-head">
+        <div class="ctg"><span class="cicon">🐒</span><span class="ctitle">Monkeytype</span></div>
+        <a class="clink" id="mt-link" href="https://monkeytype.com/profile/theUnbeknownst" target="_blank" rel="noopener">theUnbeknownst ↗</a>
+      </div>
+      <div class="cbody" id="mt-body"><div class="loading">fetching</div></div>
+    </div>
+
+    <!-- ══ LEETCODE (span 1) ════════════════════════════════════════════════ -->
+    <div class="card leetcode">
+      <div class="card-head">
+        <div class="ctg"><span class="cicon">💻</span><span class="ctitle">LeetCode</span></div>
+        <a class="clink" href="https://leetcode.com/LekhanaRM" target="_blank" rel="noopener">LekhanaRM ↗</a>
+      </div>
+      <div class="cbody" id="lc-body"><div class="loading">fetching</div></div>
+    </div>
+
+    <!-- ══ LC SKILLS + LANGUAGES (span 2) ══════════════════════════════════ -->
+    <div class="card leetcode span2" id="lc-extra-card" style="display:none;">
+      <div class="card-head">
+        <div class="ctg"><span class="cicon">📊</span><span class="ctitle">LeetCode · Skills & Languages</span></div>
+        <a class="clink" href="https://leetcode.com/LekhanaRM" target="_blank" rel="noopener">LekhanaRM ↗</a>
+      </div>
+      <div class="cbody" id="lc-extra"></div>
+    </div>
+
+    <!-- ══ 8-WEEK SQL ════════════════════════════════════════════════════════ -->
+    <div class="card sql">
+      <div class="card-head">
+        <div class="ctg"><span class="cicon">🗄️</span><span class="ctitle">8-Week SQL</span></div>
+        <a class="clink" href="https://github.com/LekhanaMitta/8WeekSQLChallenge" target="_blank" rel="noopener">repo ↗</a>
+      </div>
+      <div class="cbody" id="sql-body"><div class="loading">fetching</div></div>
+    </div>
+
+    <!-- ══ JOB TRACKER ══════════════════════════════════════════════════════ -->
+    <div class="card jobs span2">
+      <div class="card-head">
+        <div class="ctg"><span class="cicon">📋</span><span class="ctitle">Job Applications</span></div>
+        <button class="add-btn" id="openJob">+ Add</button>
+      </div>
+      <div class="cbody" id="jobs-body"></div>
+    </div>
+
+    <!-- ══ DAILY TASKS (full width) ═════════════════════════════════════════ -->
+    <div class="card tasks span3">
+      <div class="card-head">
+        <div class="ctg"><span class="cicon">✅</span><span class="ctitle">Daily Tasks</span></div>
+        <div class="frow" style="margin:0;">
+          <button class="fbtn on" data-f="all">all</button>
+          <button class="fbtn" data-f="active">active</button>
+          <button class="fbtn" data-f="done">done</button>
+        </div>
+      </div>
+      <div class="cbody">
+        <div class="task-ctrl">
+          <input class="tinput" id="taskInput" placeholder="Add a task and press Enter…" autocomplete="off"/>
+          <button class="bsm pri" id="taskAdd">Add</button>
+          <button class="bsm" id="clearDone">Clear done</button>
+        </div>
+        <div class="tlist" id="taskList"></div>
+        <div class="tprog"><div class="tbar"><div class="tfill" id="tFill"></div></div><span class="tpct" id="tPct">0%</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Job Modal -->
+<div class="mbg" id="jobModal">
+  <div class="modal">
+    <h2 id="mTitle">Add Application</h2>
+    <div class="fg"><label>Job Title</label><input id="jTitle" placeholder="Software Engineer Intern"/></div>
+    <div class="fg"><label>Company</label><input id="jCompany" placeholder="Acme Corp"/></div>
+    <div class="fg"><label>Status</label>
+      <select id="jStatus">
+        <option value="applied">Applied</option>
+        <option value="oa">OA / Assessment</option>
+        <option value="interview">Interview</option>
+        <option value="rejected">Rejected</option>
+      </select>
+    </div>
+    <div class="fg"><label>Job Summary / Notes</label><textarea id="jSummary" placeholder="Role, why you applied, referral…"></textarea></div>
+    <div class="fg"><label>Resume Version</label><input id="jResume" placeholder="resume_v3_swe.pdf"/></div>
+    <div class="fg"><label>Date Applied</label><input id="jDate" type="date"/></div>
+    <div class="mbtns">
+      <button class="bsm" id="cancelJob">Cancel</button>
+      <button class="bsm pri" id="saveJob">Save</button>
+    </div>
+  </div>
+</div>
+<div class="tooltip" id="tip"></div>
+
+<script>
+/* ── utils ── */
+const uid  = ()=>Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+const today= ()=>new Date().toISOString().slice(0,10);
+const esc  = s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const fmt  = iso=>{try{return new Date(iso).toLocaleDateString('en-GB',{month:'short',day:'numeric'});}catch{return '';}};
+document.getElementById('stamp').textContent=
+  new Date().toLocaleString('en-GB',{weekday:'long',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+
+/* ── data load ── */
+async function loadData(){
+  try{const r=await fetch('./data.json?t='+Date.now());if(!r.ok)throw 0;return await r.json();}
+  catch{return {
+    monkeytype:{username:'theUnbeknownst',streak:30,maxStreak:90,completedTests:4200,hoursTyped:140,xp:82000,
+      personalBests:{'time 15':{wpm:98,raw:106,acc:95.2,con:88.1},'time 60':{wpm:88,raw:96,acc:94.5,con:91.3},
+                     'words 50':{wpm:91,raw:99,acc:93.8,con:89.7},'time 30':{wpm:93,raw:101,acc:94,con:90}},
+      recentModes:[{name:'time 60',wpm:88,raw:96,acc:94.5,con:91.3}]},
+    leetcode:{username:'LekhanaRM',total:338,easy:147,medium:174,hard:17,
+      totalEasy:873,totalMedium:1851,totalHard:800,
+      beatsEasy:72.1,beatsMedium:68.4,beatsHard:55.2,
+      ranking:142000,streak:14,totalActiveDays:210,
+      languages:[{lang:'Python3',solved:200},{lang:'SQL',solved:98},{lang:'JavaScript',solved:40}],
+      topSkills:[{tag:'Array',solved:80,tier:'fundamental'},{tag:'Dynamic Programming',solved:55,tier:'advanced'},
+                 {tag:'Hash Table',solved:70,tier:'fundamental'},{tag:'String',solved:65,tier:'intermediate'},
+                 {tag:'Tree',solved:45,tier:'intermediate'},{tag:'Graph',solved:30,tier:'advanced'}],
+      calendar30:{}},
+    sql:{weeks:[{n:1,name:"Danny's Diner",commits:5,done:true},{n:2,name:"Pizza Runner",commits:4,done:true},
+               {n:3,name:"Foodie-Fi",commits:2,done:false},{n:4,name:"Data Bank",commits:0,done:false},
+               {n:5,name:"Data Mart",commits:0,done:false},{n:6,name:"Clique Bait",commits:0,done:false},
+               {n:7,name:"Balanced Tree",commits:0,done:false},{n:8,name:"Fresh Segments",commits:0,done:false}]}
+  };}
+}
+
+/* ═══════════════════════════════════════════════════════════
+   MONKEYTYPE
+═══════════════════════════════════════════════════════════ */
+function renderMT(d){
+  const el=document.getElementById('mt-body');
+  if(!d){el.innerHTML='<div class="err">No data — run the Action.</div>';return;}
+
+  const pbs=d.personalBests||{};
+  const pbKeys=Object.keys(pbs);
+  let activeTab=pbKeys[0]||'';
+
+  function pbHTML(key){
+    const p=pbs[key];if(!p)return '';
+    return `
+      <div class="pb-card">
+        <div class="pb-mode">${key}</div>
+        <div class="pb-val">${p.wpm}<small style="font-size:12px;color:var(--muted)"> wpm</small></div>
+        <div class="pb-stats" style="margin-top:6px;">
+          <div><div class="pb-sub">RAW <b>${p.raw}</b></div></div>
+          <div><div class="pb-sub">ACC <b>${p.acc}%</b></div></div>
+          <div><div class="pb-sub">CON <b>${p.con}%</b></div></div>
+        </div>
+      </div>`;
+  }
+
+  const pills=pbKeys.map((k,i)=>`<button class="tab${i===0?' on':''}" data-k="${k}">${k}</button>`).join('');
+  const streakColor=d.streak>=d.maxStreak*0.8?'cgr':d.streak>7?'cg':'cm';
+
+  el.innerHTML=`
+    <div class="srow">
+      <div class="stat"><div class="sv cg">${d.streak}</div><div class="sl">Streak</div></div>
+      <div class="stat"><div class="sv cm">${d.maxStreak}</div><div class="sl">Best Streak</div></div>
+      <div class="stat"><div class="sv cb">${(d.completedTests||0).toLocaleString()}</div><div class="sl">Tests</div></div>
+      <div class="stat"><div class="sv cp">${d.hoursTyped}h</div><div class="sl">Typed</div></div>
+    </div>
+    <div class="divider"></div>
+    <div class="section-lbl">Personal Bests</div>
+    <div class="tabs" id="mt-tabs">${pills}</div>
+    <div class="pb-grid" id="pb-grid">
+      ${pbKeys.map(k=>pbHTML(k)).join('')}
+    </div>`;
+
+  // filter by tab
+  document.getElementById('mt-tabs').addEventListener('click',e=>{
+    const btn=e.target.closest('.tab');if(!btn)return;
+    activeTab=btn.dataset.k;
+    document.querySelectorAll('#mt-tabs .tab').forEach(b=>b.classList.toggle('on',b===btn));
+    document.getElementById('pb-grid').innerHTML=pbHTML(activeTab);
+  });
+  // show first tab only by default
+  document.getElementById('pb-grid').innerHTML=pbHTML(activeTab);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   LEETCODE
+═══════════════════════════════════════════════════════════ */
+function renderLC(d){
+  const el=document.getElementById('lc-body');
+  if(!d){
+    el.innerHTML=`<div style="text-align:center;padding:28px;">
+      <div style="font-size:28px;opacity:.4">⏳</div>
+      <div class="loading" style="padding-top:8px;">Run Actions → Refresh Dashboard Data</div></div>`;
+    return;
+  }
+  const {total,easy,medium,hard,totalEasy,totalMedium,totalHard,beatsEasy,beatsMedium,beatsHard,ranking,streak,totalActiveDays,calendar30}=d;
+  const slices=[
+    {label:'Easy',  val:easy,  tot:totalEasy,  beats:beatsEasy,  color:'var(--blue)'},
+    {label:'Medium',val:medium,tot:totalMedium, beats:beatsMedium,color:'var(--orange)'},
+    {label:'Hard',  val:hard,  tot:totalHard,   beats:beatsHard,  color:'var(--red)'},
+  ];
+
+  el.innerHTML=`
+    <div class="srow" style="margin-bottom:14px;">
+      <div class="stat"><div class="sv cb">${easy}</div><div class="sl">Easy</div></div>
+      <div class="stat"><div class="sv co">${medium}</div><div class="sl">Medium</div></div>
+      <div class="stat"><div class="sv cr">${hard}</div><div class="sl">Hard</div></div>
+    </div>
+    <div class="divider"></div>
+    <div class="lc-ring-wrap">
+      <div class="ring-outer">
+        <canvas id="lcCanvas" width="120" height="120"></canvas>
+        <div class="ring-mid"><span class="ring-num">${total}</span><span class="ring-sub">solved</span></div>
+      </div>
+      <div class="lc-rows">
+        ${slices.map(s=>`
+          <div class="lc-row">
+            <span class="ldot" style="background:${s.color}"></span>
+            <span class="lname">${s.label}</span>
+            <span class="lpct">${s.tot?Math.round(s.val/s.tot*100):0}%</span>
+            <span class="lnum" style="color:${s.color}">${s.val}</span>
+          </div>
+          <div style="padding-left:16px;margin-top:-4px;margin-bottom:2px;">
+            <span class="lbeats">beats ${s.beats}% users</span>
+          </div>`).join('')}
+        <div class="lc-meta" style="margin-top:6px;">
+          <span>🔥 Streak <b>${streak}</b></span>
+          <span>📅 Active <b>${totalActiveDays}</b> days</span>
+          <span>🏆 Rank <b>${(ranking||0).toLocaleString()}</b></span>
+        </div>
+      </div>
+    </div>
+    ${Object.keys(calendar30||{}).length?`
+    <div class="divider"></div>
+    <div class="section-lbl">30-day activity</div>
+    <div class="cal-wrap" id="lcCal"></div>`:''}`;
+
+  // draw ring
+  const canvas=document.getElementById('lcCanvas');
+  const ctx=canvas.getContext('2d');
+  const cx=60,cy=60,r=46,lw=14;
+  const totSlice=slices.reduce((a,s)=>a+s.val,0)||1;
+  let start=-Math.PI/2;
+  const segs=slices.map(s=>{const sw=(s.val/totSlice)*(2*Math.PI);const seg={...s,start,end:start+sw};start+=sw;return seg;});
+  const tip=document.getElementById('tip');
+  function draw(hi=-1){
+    ctx.clearRect(0,0,120,120);
+    segs.forEach((s,i)=>{ctx.beginPath();ctx.arc(cx,cy,r,s.start,s.end);ctx.lineWidth=i===hi?lw+4:lw;ctx.strokeStyle=s.color;ctx.stroke();});
+  }
+  draw();
+  canvas.addEventListener('mousemove',e=>{
+    const rect=canvas.getBoundingClientRect();
+    const dx=e.clientX-rect.left-cx,dy=e.clientY-rect.top-cy,dist=Math.sqrt(dx*dx+dy*dy);
+    if(dist<r-lw/2||dist>r+lw/2){draw();tip.style.opacity=0;return;}
+    let ang=Math.atan2(dy,dx);if(ang<-Math.PI/2)ang+=2*Math.PI;
+    const hi=segs.findIndex(s=>ang>=s.start&&ang<=s.end);
+    if(hi<0){draw();tip.style.opacity=0;return;}
+    draw(hi);
+    tip.textContent=`${segs[hi].label}: ${segs[hi].val} / beats ${segs[hi].beats}%`;
+    tip.style.left=(e.clientX+12)+'px';tip.style.top=(e.clientY-28)+'px';tip.style.opacity=1;
+  });
+  canvas.addEventListener('mouseleave',()=>{draw();tip.style.opacity=0;});
+
+  // 30-day calendar
+  const calEl=document.getElementById('lcCal');
+  if(calEl&&calendar30){
+    const now=Math.floor(Date.now()/1000);
+    for(let i=29;i>=0;i--){
+      const ts=String(now-i*86400-(now%86400));
+      const nearby=Object.entries(calendar30).find(([k])=>Math.abs(parseInt(k)-parseInt(ts))<86400);
+      const cnt=nearby?nearby[1]:0;
+      const cls=cnt===0?'':cnt===1?'d1':cnt<=3?'d2':cnt<=6?'d3':'d4';
+      calEl.innerHTML+=`<div class="cal-dot${cls?' '+cls:''}" title="${cnt} submissions"></div>`;
+    }
+  }
+}
+
+/* LC skills + languages (separate card) */
+function renderLCExtra(d){
+  if(!d)return;
+  const card=document.getElementById('lc-extra-card');
+  const el=document.getElementById('lc-extra');
+  card.style.display='';
+
+  const langs=d.languages||[];
+  const maxL=langs[0]?.solved||1;
+  const skills=d.topSkills||[];
+
+  el.innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;flex-wrap:wrap;">
+      <div>
+        <div class="section-lbl">Top Languages</div>
+        <div class="lang-list">
+          ${langs.map(l=>`
+            <div class="lang-row">
+              <span class="lang-name">${esc(l.lang)}</span>
+              <div class="lang-bar"><div class="lang-fill" style="width:${Math.round(l.solved/maxL*100)}%"></div></div>
+              <span class="lang-count">${l.solved}</span>
+            </div>`).join('')}
+        </div>
+      </div>
+      <div>
+        <div class="section-lbl">Top Skills</div>
+        <div class="skill-grid">
+          ${skills.map(s=>`
+            <span class="skill-pill ${s.tier}">${esc(s.tag)} <span class="skill-num">${s.solved}</span></span>`).join('')}
+        </div>
+      </div>
+    </div>`;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SQL
+═══════════════════════════════════════════════════════════ */
+function renderSQL(d){
+  const el=document.getElementById('sql-body');
+  if(!d){el.innerHTML='<div class="err">Could not load.</div>';return;}
+  const weeks=d.weeks||[];
+  const done=weeks.filter(w=>w.done).length;
+  el.innerHTML=`
+    <div class="srow" style="margin-bottom:14px;">
+      <div class="stat"><div class="sv cgr">${done}</div><div class="sl">Done</div></div>
+      <div class="stat"><div class="sv cm">${8-done}</div><div class="sl">Left</div></div>
+      <div class="stat"><div class="sv cp">${Math.round(done/8*100)}%</div><div class="sl">Progress</div></div>
+    </div>
+    <div class="divider"></div>
+    ${weeks.map(w=>{
+      const pct=w.done?100:(w.commits>0?50:0);
+      const cls=w.done?'done':(w.commits>0?'wip':'todo');
+      const lbl=w.done?'✓ done':(w.commits>0?`${w.commits} commits`:'–');
+      return `<div class="week-row">
+        <span class="wlbl">Week ${w.n}</span>
+        <div class="wbar"><div class="wfill" style="width:${pct}%"></div></div>
+        <span class="wstat ${cls}">${lbl}</span>
+      </div>`;
+    }).join('')}
+    <div style="font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:10px;"><b style="color:var(--green)">${done}</b> of 8 case studies completed</div>`;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   JOBS
+═══════════════════════════════════════════════════════════ */
+const JK='lrm-jobs-v1';let jobs=[];
+try{jobs=JSON.parse(localStorage.getItem(JK))||[];}catch{}
+let editJob=null;
+const BADGE={applied:'b-applied',oa:'b-oa',interview:'b-interview',rejected:'b-rejected'};
+const BLBL={applied:'Applied',oa:'OA',interview:'Interview',rejected:'Rejected'};
+const sj=()=>{try{localStorage.setItem(JK,JSON.stringify(jobs));}catch{}};
+
+function renderJobs(){
+  const tod=today();
+  const todN=jobs.filter(j=>j.date===tod).length;
+  const intN=jobs.filter(j=>j.status==='interview').length;
+  document.getElementById('jobs-body').innerHTML=`
+    <div class="srow" style="margin-bottom:14px;">
+      <div class="stat"><div class="sv cb">${jobs.length}</div><div class="sl">Total</div></div>
+      <div class="stat"><div class="sv cg">${todN}</div><div class="sl">Today</div></div>
+      <div class="stat"><div class="sv cgr">${intN}</div><div class="sl">Interviews</div></div>
+    </div>
+    <div class="divider"></div>
+    <div class="jlist" id="jList">
+      ${!jobs.length?'<div class="empty">No applications yet. Add your first one!</div>':
+        [...jobs].reverse().map(j=>`
+          <div class="jitem" data-id="${j.id}">
+            <div class="ji-top">
+              <span class="ji-title">${esc(j.title)}</span>
+              <span class="jbadge ${BADGE[j.status]||'b-applied'}">${BLBL[j.status]||j.status}</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:2px;">
+              <span class="ji-company">${esc(j.company)}${j.resume?` · <em style="opacity:.7">${esc(j.resume)}</em>`:''}</span>
+              <span class="ji-date">${j.date}</span>
+            </div>
+            ${j.summary?`<div style="font-size:11px;color:var(--muted);margin-top:5px;line-height:1.4">${esc(j.summary).slice(0,110)}${j.summary.length>110?'…':''}</div>`:''}
+          </div>`).join('')}
+    </div>`;
+  document.getElementById('jList')?.querySelectorAll('.jitem').forEach(el=>{
+    el.addEventListener('click',()=>openEditJob(el.dataset.id));
+  });
+}
+function openEditJob(id){
+  const j=jobs.find(x=>x.id===id);if(!j)return;
+  editJob=id;document.getElementById('mTitle').textContent='Edit Application';
+  document.getElementById('jTitle').value=j.title||'';
+  document.getElementById('jCompany').value=j.company||'';
+  document.getElementById('jStatus').value=j.status||'applied';
+  document.getElementById('jSummary').value=j.summary||'';
+  document.getElementById('jResume').value=j.resume||'';
+  document.getElementById('jDate').value=j.date||today();
+  document.getElementById('jobModal').classList.add('open');
+}
+document.getElementById('openJob').addEventListener('click',()=>{
+  editJob=null;document.getElementById('mTitle').textContent='Add Application';
+  ['jTitle','jCompany','jSummary','jResume'].forEach(i=>document.getElementById(i).value='');
+  document.getElementById('jStatus').value='applied';
+  document.getElementById('jDate').value=today();
+  document.getElementById('jobModal').classList.add('open');
+});
+document.getElementById('cancelJob').addEventListener('click',()=>document.getElementById('jobModal').classList.remove('open'));
+document.getElementById('jobModal').addEventListener('click',e=>{if(e.target===e.currentTarget)e.currentTarget.classList.remove('open');});
+document.getElementById('saveJob').addEventListener('click',()=>{
+  const t=document.getElementById('jTitle').value.trim();
+  const c=document.getElementById('jCompany').value.trim();
+  if(!t||!c){alert('Title and company required.');return;}
+  const entry={id:editJob||uid(),title:t,company:c,
+    status:document.getElementById('jStatus').value,
+    summary:document.getElementById('jSummary').value.trim(),
+    resume:document.getElementById('jResume').value.trim(),
+    date:document.getElementById('jDate').value||today()};
+  jobs=editJob?jobs.map(j=>j.id===editJob?entry:j):[...jobs,entry];
+  sj();renderJobs();document.getElementById('jobModal').classList.remove('open');
+});
+
+/* ═══════════════════════════════════════════════════════════
+   TASKS
+═══════════════════════════════════════════════════════════ */
+const TK='lrm-tasks-v1';let tasks=[];
+try{tasks=JSON.parse(localStorage.getItem(TK))||[];}catch{}
+let tf='all';
+const st=()=>{try{localStorage.setItem(TK,JSON.stringify(tasks));}catch{}};
+const vis=()=>tf==='active'?tasks.filter(t=>!t.done):tf==='done'?tasks.filter(t=>t.done):tasks;
+
+function renderTasks(){
+  const list=vis();
+  const done=tasks.filter(t=>t.done).length,tot=tasks.length;
+  const pct=tot?Math.round(done/tot*100):0;
+  document.getElementById('tFill').style.width=pct+'%';
+  document.getElementById('tPct').textContent=pct+'%';
+  const el=document.getElementById('taskList');
+  if(!list.length){el.innerHTML=`<div class="empty">${tot===0?'No tasks yet.':'No tasks in this view.'}</div>`;return;}
+  el.innerHTML=list.map(t=>`
+    <div class="titem${t.done?' done':''}" data-id="${t.id}">
+      <input class="tcb" type="checkbox" ${t.done?'checked':''} data-a="chk"/>
+      <input class="ttext" value="${esc(t.title)}" data-a="edt"/>
+      <span class="tmeta">${fmt(t.created)}</span>
+      <button class="tnbtn${t.notes?' on':''}" data-a="note">${t.notes?'❝':'＋'}</button>
+      <button class="tdel" data-a="del">✕</button>
+    </div>
+    <textarea class="tnotes${t._open?' open':''}" data-id="${t.id}" placeholder="Notes…">${t.notes||''}</textarea>
+  `).join('');
+  el.querySelectorAll('[data-a="chk"]').forEach(cb=>cb.addEventListener('change',e=>{
+    const t=tasks.find(x=>x.id===e.target.closest('[data-id]').dataset.id);
+    if(t){t.done=e.target.checked;st();renderTasks();}
+  }));
+  el.querySelectorAll('[data-a="edt"]').forEach(i=>i.addEventListener('input',e=>{
+    const t=tasks.find(x=>x.id===e.target.closest('[data-id]').dataset.id);
+    if(t){t.title=e.target.value;st();}
+  }));
+  el.querySelectorAll('[data-a="del"]').forEach(b=>b.addEventListener('click',e=>{
+    tasks=tasks.filter(t=>t.id!==e.target.closest('[data-id]').dataset.id);st();renderTasks();
+  }));
+  el.querySelectorAll('[data-a="note"]').forEach(b=>b.addEventListener('click',e=>{
+    const t=tasks.find(x=>x.id===e.target.closest('[data-id]').dataset.id);
+    if(t){t._open=!t._open;st();renderTasks();}
+  }));
+  el.querySelectorAll('.tnotes').forEach(ta=>ta.addEventListener('input',e=>{
+    const t=tasks.find(x=>x.id===e.target.dataset.id);
+    if(t){t.notes=e.target.value;st();}
+  }));
+}
+document.getElementById('taskAdd').addEventListener('click',addTask);
+document.getElementById('taskInput').addEventListener('keydown',e=>{if(e.key==='Enter')addTask();});
+function addTask(){
+  const v=document.getElementById('taskInput').value.trim();if(!v)return;
+  tasks.push({id:uid(),title:v,done:false,notes:'',_open:false,created:new Date().toISOString()});
+  document.getElementById('taskInput').value='';st();renderTasks();
+}
+document.getElementById('clearDone').addEventListener('click',()=>{
+  if(!tasks.some(t=>t.done))return;
+  if(confirm('Remove all completed tasks?')){tasks=tasks.filter(t=>!t.done);st();renderTasks();}
+});
+document.querySelectorAll('.fbtn').forEach(b=>b.addEventListener('click',()=>{
+  tf=b.dataset.f;
+  document.querySelectorAll('.fbtn').forEach(x=>x.classList.toggle('on',x===b));
+  renderTasks();
+}));
+
+/* ── boot ── */
+(async()=>{
+  const data=await loadData();
+  renderMT(data.monkeytype);
+  renderLC(data.leetcode);
+  renderLCExtra(data.leetcode);
+  renderSQL(data.sql);
+  renderJobs();
+  renderTasks();
+})();
+</script>
+</body>
+</html>
