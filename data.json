@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-20T02:11:14.316893+00:00",
+  "generatedAt": "2026-06-20T06:53:58.629511+00:00",
   "monkeytype": {
     "username": "theUnbeknownst",
     "profileUrl": "https://monkeytype.com/profile/theUnbeknownst",
@@ -51,7 +51,7 @@
         "con": 76.1
       }
     ],
-    "lastUpdated": "2026-06-20T02:11:11.342690+00:00"
+    "lastUpdated": "2026-06-20T06:53:56.629740+00:00"
   },
   "leetcode": {
     "username": "LekhanaRM",
@@ -131,7 +131,7 @@
       }
     ],
     "calendar30": {},
-    "lastUpdated": "2026-06-20T02:11:12.617498+00:00"
+    "lastUpdated": "2026-06-20T06:53:57.141785+00:00"
   },
   "sql": {
     "repo": "LekhanaMitta/8WeekSQLChallenge",
@@ -193,6 +193,6 @@
         "done": false
       }
     ],
-    "lastUpdated": "2026-06-20T02:11:14.316864+00:00"
+    "lastUpdated": "2026-06-20T06:53:58.629481+00:00"
   }
 }
