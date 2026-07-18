@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-18T07:25:14.221873+00:00",
+  "generatedAt": "2026-07-18T10:08:05.124065+00:00",
   "monkeytype": {
     "username": "theUnbeknownst",
     "profileUrl": "https://monkeytype.com/profile/theUnbeknownst",
@@ -51,7 +51,7 @@
         "con": 76.1
       }
     ],
-    "lastUpdated": "2026-07-18T07:24:51.150825+00:00"
+    "lastUpdated": "2026-07-18T10:08:02.144425+00:00"
   },
   "leetcode": {
     "username": "LekhanaRM",
@@ -88,12 +88,53 @@
         "solved": 1
       }
     ],
-    "topSkills": [],
+    "topSkills": [
+      {
+        "tag": "Array",
+        "solved": 143,
+        "tier": "fundamental"
+      },
+      {
+        "tag": "Database",
+        "solved": 61,
+        "tier": "intermediate"
+      },
+      {
+        "tag": "Dynamic Programming",
+        "solved": 58,
+        "tier": "advanced"
+      },
+      {
+        "tag": "Tree",
+        "solved": 51,
+        "tier": "intermediate"
+      },
+      {
+        "tag": "Binary Tree",
+        "solved": 50,
+        "tier": "intermediate"
+      },
+      {
+        "tag": "Depth-First Search",
+        "solved": 48,
+        "tier": "intermediate"
+      },
+      {
+        "tag": "Hash Table",
+        "solved": 46,
+        "tier": "intermediate"
+      },
+      {
+        "tag": "String",
+        "solved": 37,
+        "tier": "fundamental"
+      }
+    ],
     "calendar30": {
       "1783382400": 9,
       "1783468800": 2
     },
-    "lastUpdated": "2026-07-18T07:25:11.610237+00:00"
+    "lastUpdated": "2026-07-18T10:08:02.915656+00:00"
   },
   "sql": {
     "repo": "LekhanaMitta/8WeekSQLChallenge",
@@ -155,6 +196,6 @@
         "done": false
       }
     ],
-    "lastUpdated": "2026-07-18T07:25:14.221843+00:00"
+    "lastUpdated": "2026-07-18T10:08:05.124033+00:00"
   }
 }
