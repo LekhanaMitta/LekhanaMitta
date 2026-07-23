@@ -18,7 +18,7 @@
   <rect x="0" y="0" width="720" height="220" rx="16" class="card"/>
 
   <text x="24" y="42" class="title">LeetCode Dashboard — LekhanaRM</text>
-  <text x="24" y="66" class="muted">Updated: 2026-07-22 08:41 UTC</text>
+  <text x="24" y="66" class="muted">Updated: 2026-07-23 08:42 UTC</text>
 
   <line x1="24" y1="84" x2="696" y2="84" class="divider"/>
 
@@ -26,16 +26,16 @@
   <text x="24" y="152" class="value">340</text>
 
   <text x="180" y="120" class="label">Easy</text>
-  <text x="180" y="152" class="value">147</text>
+  <text x="180" y="152" class="value">146</text>
 
   <text x="310" y="120" class="label">Medium</text>
-  <text x="310" y="152" class="value">176</text>
+  <text x="310" y="152" class="value">177</text>
 
   <text x="470" y="120" class="label">Hard</text>
   <text x="470" y="152" class="value">17</text>
 
   <text x="600" y="120" class="label">Rank</text>
-  <text x="600" y="152" class="value">398233</text>
+  <text x="600" y="152" class="value">398590</text>
 
   <text x="520" y="120" class="label">Difficulty Mix</text>
 
@@ -47,9 +47,9 @@
           stroke="#00b8a3" stroke-width="18"
           fill="none"
           stroke-linecap="round"
-          stroke-dasharray="114.09525319566697 263.89378290154264"
+          stroke-dasharray="113.31909501066242 263.89378290154264"
           stroke-dashoffset="65.97344572538566">
-    <title>Easy: 147 (43.2%) • Acceptance rate: 77%</title>
+    <title>Easy: 146 (42.9%) • Acceptance rate: 78%</title>
   </circle>
 
   <!-- Medium -->
@@ -58,9 +58,9 @@
           stroke="#ffc01e" stroke-width="18"
           fill="none"
           stroke-linecap="round"
-          stroke-dasharray="136.60384056079855 263.89378290154264"
-          stroke-dashoffset="-48.12180747028131">
-    <title>Medium: 176 (51.8%) • Acceptance rate: 74%</title>
+          stroke-dasharray="137.37999874580308 263.89378290154264"
+          stroke-dashoffset="-47.345649285276764">
+    <title>Medium: 177 (52.1%) • Acceptance rate: 74%</title>
   </circle>
 
   <!-- Hard -->
