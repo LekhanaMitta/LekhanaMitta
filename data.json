@@ -1,16 +1,43 @@
 {
-  "generatedAt": "2026-10-03T02:43:13.291235+00:00",
+  "generatedAt": "2026-10-03T08:41:10.634795+00:00",
   "monkeytype": {
     "username": "theUnbeknownst",
     "profileUrl": "https://monkeytype.com/profile/theUnbeknownst",
-    "streak": 0,
-    "maxStreak": 0,
-    "completedTests": 0,
-    "hoursTyped": 0.0,
-    "xp": 0,
-    "personalBests": {},
-    "recentModes": [],
-    "lastUpdated": "2026-10-03T02:43:10.019109+00:00"
+    "streak": 2,
+    "maxStreak": 59,
+    "completedTests": 440,
+    "hoursTyped": 37.2,
+    "xp": 757719,
+    "personalBests": {
+      "time 30": {
+        "wpm": 64.0,
+        "raw": 64.0,
+        "acc": 99.4,
+        "con": 38.9
+      },
+      "time 60": {
+        "wpm": 72.0,
+        "raw": 72.0,
+        "acc": 96.2,
+        "con": 82.4
+      },
+      "time 120": {
+        "wpm": 76.1,
+        "raw": 76.1,
+        "acc": 98.7,
+        "con": 76.9
+      }
+    },
+    "recentModes": [
+      {
+        "name": "time 120",
+        "wpm": 76.1,
+        "raw": 78.8,
+        "acc": 98.7,
+        "con": 76.9
+      }
+    ],
+    "lastUpdated": "2026-10-03T08:41:07.647949+00:00"
   },
   "leetcode": {
     "username": "LekhanaRM",
@@ -90,7 +117,7 @@
       }
     ],
     "calendar30": {},
-    "lastUpdated": "2026-10-03T02:43:11.081198+00:00"
+    "lastUpdated": "2026-10-03T08:41:08.367726+00:00"
   },
   "sql": {
     "repo": "LekhanaMitta/8WeekSQLChallenge",
@@ -152,6 +179,6 @@
         "done": false
       }
     ],
-    "lastUpdated": "2026-10-03T02:43:13.291209+00:00"
+    "lastUpdated": "2026-10-03T08:41:10.634775+00:00"
   }
 }
