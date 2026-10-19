@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-19T16:22:41.190477+00:00",
+  "generatedAt": "2026-10-19T21:49:03.583119+00:00",
   "monkeytype": {
     "username": "theUnbeknownst",
     "profileUrl": "https://monkeytype.com/profile/theUnbeknownst",
@@ -37,7 +37,7 @@
         "con": 76.9
       }
     ],
-    "lastUpdated": "2026-10-19T16:22:36.849187+00:00"
+    "lastUpdated": "2026-10-19T21:49:00.576765+00:00"
   },
   "leetcode": {
     "username": "LekhanaRM",
@@ -55,7 +55,7 @@
     "ranking": 426892,
     "reputation": 0,
     "streak": 11,
-    "totalActiveDays": 65,
+    "totalActiveDays": 66,
     "languages": [
       {
         "lang": "C++",
@@ -71,7 +71,7 @@
       },
       {
         "lang": "Python3",
-        "solved": 1
+        "solved": 4
       }
     ],
     "topSkills": [
@@ -116,8 +116,10 @@
         "tier": "fundamental"
       }
     ],
-    "calendar30": {},
-    "lastUpdated": "2026-10-19T16:22:38.461692+00:00"
+    "calendar30": {
+      "1792368000": 4
+    },
+    "lastUpdated": "2026-10-19T21:49:00.977312+00:00"
   },
   "sql": {
     "repo": "LekhanaMitta/8WeekSQLChallenge",
@@ -179,6 +181,6 @@
         "done": false
       }
     ],
-    "lastUpdated": "2026-10-19T16:22:41.190453+00:00"
+    "lastUpdated": "2026-10-19T21:49:03.583094+00:00"
   }
 }
