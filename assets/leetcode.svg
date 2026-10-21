@@ -18,12 +18,12 @@
   <rect x="0" y="0" width="720" height="220" rx="16" class="card"/>
 
   <text x="24" y="42" class="title">LeetCode Dashboard — LekhanaRM</text>
-  <text x="24" y="66" class="muted">Updated: 2026-10-20 11:29 UTC</text>
+  <text x="24" y="66" class="muted">Updated: 2026-10-21 11:41 UTC</text>
 
   <line x1="24" y1="84" x2="696" y2="84" class="divider"/>
 
   <text x="24" y="120" class="label">Solved</text>
-  <text x="24" y="152" class="value">341</text>
+  <text x="24" y="152" class="value">343</text>
 
   <text x="180" y="120" class="label">Easy</text>
   <text x="180" y="152" class="value">146</text>
@@ -32,10 +32,10 @@
   <text x="310" y="152" class="value">178</text>
 
   <text x="470" y="120" class="label">Hard</text>
-  <text x="470" y="152" class="value">17</text>
+  <text x="470" y="152" class="value">19</text>
 
   <text x="600" y="120" class="label">Rank</text>
-  <text x="600" y="152" class="value">425140</text>
+  <text x="600" y="152" class="value">421459</text>
 
   <text x="520" y="120" class="label">Difficulty Mix</text>
 
@@ -47,9 +47,9 @@
           stroke="#00b8a3" stroke-width="18"
           fill="none"
           stroke-linecap="round"
-          stroke-dasharray="112.98678094904758 263.89378290154264"
+          stroke-dasharray="112.327965899782 263.89378290154264"
           stroke-dashoffset="65.97344572538566">
-    <title>Easy: 146 (42.8%) • Acceptance rate: 76%</title>
+    <title>Easy: 146 (42.6%) • Acceptance rate: 76%</title>
   </circle>
 
   <!-- Medium -->
@@ -58,9 +58,9 @@
           stroke="#ffc01e" stroke-width="18"
           fill="none"
           stroke-linecap="round"
-          stroke-dasharray="137.75100691048266 263.89378290154264"
-          stroke-dashoffset="-47.013335223661926">
-    <title>Medium: 178 (52.2%) • Acceptance rate: 74%</title>
+          stroke-dasharray="136.94779404219997 263.89378290154264"
+          stroke-dashoffset="-46.35452017439634">
+    <title>Medium: 178 (51.9%) • Acceptance rate: 73%</title>
   </circle>
 
   <!-- Hard -->
@@ -69,14 +69,14 @@
           stroke="#ff375f" stroke-width="18"
           fill="none"
           stroke-linecap="round"
-          stroke-dasharray="13.155995042012389 263.89378290154264"
-          stroke-dashoffset="-184.76434213414458">
-    <title>Hard: 17 (5.0%) • Acceptance rate: 89%</title>
+          stroke-dasharray="14.61802295956067 263.89378290154264"
+          stroke-dashoffset="-183.3023142165963">
+    <title>Hard: 19 (5.5%) • Acceptance rate: 79%</title>
   </circle>
 
   <circle cx="610" cy="155" r="33.0" class="ring-cutout"/>
 
-  <text x="610" y="153" text-anchor="middle" class="value" style="font-size:18px;">341</text>
+  <text x="610" y="153" text-anchor="middle" class="value" style="font-size:18px;">343</text>
   <text x="610" y="173" text-anchor="middle" class="muted">Solved</text>
 
   <text x="520" y="206" class="muted">Overall acceptance rate: 75%</text>
