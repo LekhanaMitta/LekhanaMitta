@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-26T15:35:11.896048+00:00",
+  "generatedAt": "2026-10-26T22:01:38.275771+00:00",
   "monkeytype": {
     "username": "theUnbeknownst",
     "profileUrl": "https://monkeytype.com/profile/theUnbeknownst",
@@ -37,25 +37,25 @@
         "con": 76.9
       }
     ],
-    "lastUpdated": "2026-10-26T15:35:07.684085+00:00"
+    "lastUpdated": "2026-10-26T22:01:35.279065+00:00"
   },
   "leetcode": {
     "username": "LekhanaRM",
     "profileUrl": "https://leetcode.com/LekhanaRM",
-    "total": 343,
-    "easy": 146,
-    "medium": 178,
+    "total": 347,
+    "easy": 147,
+    "medium": 181,
     "hard": 19,
     "totalEasy": 974,
     "totalMedium": 2135,
     "totalHard": 986,
     "beatsEasy": 94.7,
-    "beatsMedium": 92.6,
+    "beatsMedium": 92.7,
     "beatsHard": 76.4,
     "ranking": 422741,
     "reputation": 0,
     "streak": 11,
-    "totalActiveDays": 69,
+    "totalActiveDays": 70,
     "languages": [
       {
         "lang": "C++",
@@ -71,13 +71,13 @@
       },
       {
         "lang": "Python3",
-        "solved": 12
+        "solved": 16
       }
     ],
     "topSkills": [
       {
         "tag": "Array",
-        "solved": 144,
+        "solved": 148,
         "tier": "fundamental"
       },
       {
@@ -107,7 +107,7 @@
       },
       {
         "tag": "Hash Table",
-        "solved": 46,
+        "solved": 47,
         "tier": "intermediate"
       },
       {
@@ -120,9 +120,10 @@
       "1792368000": 5,
       "1792454400": 8,
       "1792540800": 2,
-      "1792713600": 1
+      "1792713600": 1,
+      "1792972800": 5
     },
-    "lastUpdated": "2026-10-26T15:35:08.943518+00:00"
+    "lastUpdated": "2026-10-26T22:01:36.280838+00:00"
   },
   "sql": {
     "repo": "LekhanaMitta/8WeekSQLChallenge",
@@ -184,6 +185,6 @@
         "done": false
       }
     ],
-    "lastUpdated": "2026-10-26T15:35:11.896026+00:00"
+    "lastUpdated": "2026-10-26T22:01:38.275745+00:00"
   }
 }
