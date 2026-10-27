@@ -1,34 +1,61 @@
 {
-  "generatedAt": "2026-10-27T14:59:26.580026+00:00",
+  "generatedAt": "2026-10-27T19:50:37.032159+00:00",
   "monkeytype": {
     "username": "theUnbeknownst",
     "profileUrl": "https://monkeytype.com/profile/theUnbeknownst",
-    "streak": 0,
-    "maxStreak": 0,
-    "completedTests": 0,
-    "hoursTyped": 0.0,
-    "xp": 0,
-    "personalBests": {},
-    "recentModes": [],
-    "lastUpdated": "2026-10-27T14:59:23.269499+00:00"
+    "streak": 1,
+    "maxStreak": 59,
+    "completedTests": 442,
+    "hoursTyped": 37.3,
+    "xp": 760346,
+    "personalBests": {
+      "time 30": {
+        "wpm": 64.0,
+        "raw": 64.0,
+        "acc": 99.4,
+        "con": 38.9
+      },
+      "time 60": {
+        "wpm": 72.0,
+        "raw": 72.0,
+        "acc": 96.2,
+        "con": 82.4
+      },
+      "time 120": {
+        "wpm": 76.1,
+        "raw": 76.1,
+        "acc": 98.7,
+        "con": 76.9
+      }
+    },
+    "recentModes": [
+      {
+        "name": "time 120",
+        "wpm": 76.1,
+        "raw": 78.8,
+        "acc": 98.7,
+        "con": 76.9
+      }
+    ],
+    "lastUpdated": "2026-10-27T19:50:33.317762+00:00"
   },
   "leetcode": {
     "username": "LekhanaRM",
     "profileUrl": "https://leetcode.com/LekhanaRM",
-    "total": 347,
+    "total": 348,
     "easy": 147,
     "medium": 181,
-    "hard": 19,
+    "hard": 20,
     "totalEasy": 974,
     "totalMedium": 2136,
     "totalHard": 986,
     "beatsEasy": 94.7,
     "beatsMedium": 92.7,
-    "beatsHard": 76.4,
+    "beatsHard": 77.4,
     "ranking": 415289,
     "reputation": 0,
     "streak": 11,
-    "totalActiveDays": 70,
+    "totalActiveDays": 71,
     "languages": [
       {
         "lang": "C++",
@@ -44,7 +71,7 @@
       },
       {
         "lang": "Python3",
-        "solved": 16
+        "solved": 17
       }
     ],
     "topSkills": [
@@ -94,9 +121,10 @@
       "1792454400": 8,
       "1792540800": 2,
       "1792713600": 1,
-      "1792972800": 5
+      "1792972800": 5,
+      "1793059200": 6
     },
-    "lastUpdated": "2026-10-27T14:59:23.891631+00:00"
+    "lastUpdated": "2026-10-27T19:50:33.869595+00:00"
   },
   "sql": {
     "repo": "LekhanaMitta/8WeekSQLChallenge",
@@ -158,6 +186,6 @@
         "done": false
       }
     ],
-    "lastUpdated": "2026-10-27T14:59:26.579997+00:00"
+    "lastUpdated": "2026-10-27T19:50:37.032133+00:00"
   }
 }
