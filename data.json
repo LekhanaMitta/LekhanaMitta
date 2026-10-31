@@ -1,16 +1,43 @@
 {
-  "generatedAt": "2026-10-31T03:04:32.965459+00:00",
+  "generatedAt": "2026-10-31T11:21:56.502627+00:00",
   "monkeytype": {
     "username": "theUnbeknownst",
     "profileUrl": "https://monkeytype.com/profile/theUnbeknownst",
-    "streak": 0,
-    "maxStreak": 0,
-    "completedTests": 0,
-    "hoursTyped": 0.0,
-    "xp": 0,
-    "personalBests": {},
-    "recentModes": [],
-    "lastUpdated": "2026-10-31T03:04:30.185592+00:00"
+    "streak": 1,
+    "maxStreak": 59,
+    "completedTests": 442,
+    "hoursTyped": 37.3,
+    "xp": 760346,
+    "personalBests": {
+      "time 30": {
+        "wpm": 64.0,
+        "raw": 64.0,
+        "acc": 99.4,
+        "con": 38.9
+      },
+      "time 60": {
+        "wpm": 72.0,
+        "raw": 72.0,
+        "acc": 96.2,
+        "con": 82.4
+      },
+      "time 120": {
+        "wpm": 76.1,
+        "raw": 76.1,
+        "acc": 98.7,
+        "con": 76.9
+      }
+    },
+    "recentModes": [
+      {
+        "name": "time 120",
+        "wpm": 76.1,
+        "raw": 78.8,
+        "acc": 98.7,
+        "con": 76.9
+      }
+    ],
+    "lastUpdated": "2026-10-31T11:21:53.463384+00:00"
   },
   "leetcode": {
     "username": "LekhanaRM",
@@ -25,7 +52,7 @@
     "beatsEasy": 94.7,
     "beatsMedium": 92.7,
     "beatsHard": 78.3,
-    "ranking": 412170,
+    "ranking": 412351,
     "reputation": 0,
     "streak": 11,
     "totalActiveDays": 72,
@@ -98,7 +125,7 @@
       "1793059200": 7,
       "1793145600": 1
     },
-    "lastUpdated": "2026-10-31T03:04:30.717684+00:00"
+    "lastUpdated": "2026-10-31T11:21:54.120551+00:00"
   },
   "sql": {
     "repo": "LekhanaMitta/8WeekSQLChallenge",
@@ -160,6 +187,6 @@
         "done": false
       }
     ],
-    "lastUpdated": "2026-10-31T03:04:32.965421+00:00"
+    "lastUpdated": "2026-10-31T11:21:56.502600+00:00"
   }
 }
